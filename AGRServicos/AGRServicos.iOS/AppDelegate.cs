@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
+using System.Threading.Tasks;
 using Foundation;
 using UIKit;
+
 
 namespace AGRServicos.iOS
 {
@@ -26,6 +25,44 @@ namespace AGRServicos.iOS
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);
+        }
+
+        public async override void OnActivated(UIApplication application)
+        {
+            Console.WriteLine("OnActivated called, App is active.");
+        }
+
+        public override void WillEnterForeground(UIApplication application)
+        {
+            Console.WriteLine("App will enter foreground");
+        }
+
+        public override void OnResignActivation(UIApplication application)
+        {
+            Console.WriteLine("OnResignActivation called, App moving to inactive state.");
+        }
+
+        public async override void DidEnterBackground(UIApplication application)
+        {
+            Console.WriteLine("App entering background state. ");
+
+            nint taskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { });
+            new Task(async () =>
+            {
+                await Task.Delay(120000);
+                double timeRemaining = UIApplication.SharedApplication.BackgroundTimeRemaining;
+                Console.WriteLine($"tarefa iniciada {timeRemaining}");
+
+                //Finaliza o seviço.
+                UIApplication.SharedApplication.EndBackgroundTask(taskId);
+            }).Start();
+
+            Console.WriteLine("App entering background state.");
+        }
+        // not guaranteed that this will run
+        public override void WillTerminate(UIApplication application)
+        {
+            Console.WriteLine("App is terminating.");
         }
     }
 }
