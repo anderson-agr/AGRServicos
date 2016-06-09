@@ -44,7 +44,7 @@ namespace AGRServicos.iOS
 
         public async override void DidEnterBackground(UIApplication application)
         {
-            Console.WriteLine("App entering background state. ");
+            Console.WriteLine("App entering background state.");
 
             nint taskId = UIApplication.SharedApplication.BeginBackgroundTask(() => { });
             new Task(async () =>
